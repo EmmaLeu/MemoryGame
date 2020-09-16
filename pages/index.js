@@ -5,8 +5,12 @@ export default function App() {
   const [options, setOptions] = useState(null)
   const [highScore, setHighScore] = useState(0)
 
-  useEffect(() =>{
-    //Load when game starts
+  useEffect(() => {
+    const json = localStorage.getItem('memorygamehighscore')
+    const savedScore = JSON.parse(json)
+    if (savedScore) {
+      setHighScore(savedScore)
+    }
   }, [])
 
   return (
