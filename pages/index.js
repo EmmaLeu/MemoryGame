@@ -179,24 +179,22 @@ function MemoryGame({options, setOptions, highScore, setHighScore}){
     //Loads when the game variable changes
   }, [game])
 
-  if (game.length === 2) {
-    if (flippedIndexes.length === 2) {
-      const match = game[flippedIndexes[0]].colorId === game[flippedIndexes[1]].colorId
+  if (flippedIndexes.length === 2) {
+    const match = game[flippedIndexes[0]].colorId === game[flippedIndexes[1]].colorId
 
-      if (match) {
-        const newGame = [...game]
-        newGame[flippedIndexes[0]].flipped = true
-        newGame[flippedIndexes[1]].flipped = true
-        setGame(newGame)
+    if (match) {
+      const newGame = [...game]
+      newGame[flippedIndexes[0]].flipped = true
+      newGame[flippedIndexes[1]].flipped = true
+      setGame(newGame)
 
-        const newIndexes = [...flippedIndexes]
-        newIndexes.push(false)
-        setFlippedIndexes(newIndexes)      
-      } else {
-        const newIndexes = [...flippedIndexes]
-        newIndexes.push(true)
-        setFlippedIndexes(newIndexes)
-      }
+      const newIndexes = [...flippedIndexes]
+      newIndexes.push(false)
+      setFlippedIndexes(newIndexes)      
+    } else {
+      const newIndexes = [...flippedIndexes]
+      newIndexes.push(true)
+      setFlippedIndexes(newIndexes)
     }
   }
 
