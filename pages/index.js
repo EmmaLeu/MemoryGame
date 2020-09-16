@@ -198,7 +198,7 @@ function MemoryGame({options, setOptions, highScore, setHighScore}){
                 game={game}
                 flippedCount={flippedCount}
                 setFlippedCount={setFlippedCount}
-                flippedIndexes={setFlippedIndexes}
+                flippedIndexes={flippedIndexes}
                 setFlippedIndexes={setFlippedIndexes}
               />
             </div>
@@ -229,8 +229,23 @@ function Card({
   }, [flippedIndexes])
 
   const onCardClicked = () => {
-    console.log("Card clicked")
-    set(state => !state)
+    if(!game[id].flipped && flippedCount % 3 === 0) {
+      set(state => !state)
+      setFlippedCount(flippedCount + 1)
+      const newIndexes = [...flippedIndexes]
+      newIndexes.push(id)
+      setFlippedIndexes(newIndexes)
+    } else if (
+      flippedCount % 3 === 1 &&
+      !game[id].flipped &&
+      flippedIndexes.indexOf(id) < 0
+    ) {
+      set(state => !state)
+      setFlippedCount(flippedCount + 1)
+      const newIndexes = [...flippedIndexes]
+      newIndexes.push(id)
+      setFlippedIndexes(newIndexes)
+    }
   }
 
   return (
