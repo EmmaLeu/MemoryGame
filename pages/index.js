@@ -208,6 +208,48 @@ function MemoryGame({options, setOptions, highScore, setHighScore}){
   }
 }
 
-function Card(props) {
-  return <div>I'm a card</div>
+function Card({
+  id,
+  color,
+  game,
+  flippedCount,
+  setFlippedCount,
+  flippedIndexes,
+  setFlippedIndexes
+}) {
+  const [flipped, set] = useState(false)
+  const {transform, opacity} = useSpring({
+    opacity: flipped ? 1 : 0,
+    transform: `perspective(600px) rotateX(${flipped ? 180 : 0}deg)`,
+    config: {mass: 5, tension: 500, friction: 80},
+  })
+
+  useEffect(() => {
+    console.log("Flipped Indexes Changed")
+  }, [flippedIndexes])
+
+  const onCardClicked = () => {
+    console.log("Card clicked")
+    set(state => !state)
+  }
+
+  return (
+    <div onClick={onCardClicked}>
+      <a.div
+        className="c back"
+        style={{
+          opacity: opacity.interpolate(o => 1 - o),
+          transform,
+        }}
+      />
+      <a.div
+        className="c front"
+        style={{
+          opacity,
+          transform: transform.interpolate(t => `${t} rotateX(180deg)`),
+          background: color,
+        }}
+      />
+  </div>
+  )
 }
