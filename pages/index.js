@@ -176,7 +176,48 @@ function MemoryGame({options, setOptions, highScore, setHighScore}){
   }, [])
 
   useEffect(() => {
-    //Loads when the game variable changes
+    const finished = !game.some(card => !card.flipped)
+    if (finished && game.length > 0) {
+      setTimeout(() => {
+        const bestPossible = game.length
+        let multiplier
+
+        if (options === 12) {
+          multiplier = 5
+        } else if (options === 18) {
+          multiplier = 2.5
+        } else if (options === 24) {
+          multiplier = 1
+        }
+
+        const pointsLost = multiplier * (0.66 * flippedCount - bestPossible)
+
+        let score
+        if (pointsLost < 100) {
+          score = 100 - pointsLost
+        } else {
+          score = 0
+        }
+
+        if (score > highScore) {
+          setHighScore(score)
+          const json = JSON.stringify(score)
+          localStorage.setItem('memorygamehighscore', json)
+        }
+
+        const newGame = confirm('You Win! SCORE: ' + score + ' New Game?')
+        if (newGame)
+        {
+          const gameLength = game.length
+          setOptions(null)
+          setTimeout(() => {
+            setOptions(gameLength)
+          }, 5)
+        } else {
+          setOptions(null)
+        }
+      }, 500)
+    }
   }, [game])
 
   if (flippedIndexes.length === 2) {
