@@ -153,7 +153,7 @@ function MemoryGame({options, setOptions, highScore, setHighScore}){
 
   useEffect(() => {
     const newGame = []
-    for(let index = 0; index < options / 2; index++){
+    for (let index = 0; index < options / 2; index++){
       const firstOption = {
         id: 2 * index,
         colorId: index,
@@ -179,8 +179,25 @@ function MemoryGame({options, setOptions, highScore, setHighScore}){
     //Loads when the game variable changes
   }, [game])
 
-  if(game.length === 2) {
-    //Runs if 2 cards have been flipped
+  if (game.length === 2) {
+    if (flippedIndexes.length === 2) {
+      const match = game[flippedIndexes[0]].colorId === game[flippedIndexes[1]].colorId
+
+      if (match) {
+        const newGame = [...game]
+        newGame[flippedIndexes[0]].flipped = true
+        newGame[flippedIndexes[1]].flipped = true
+        setGame(newGame)
+
+        const newIndexes = [...flippedIndexes]
+        newIndexes.push(false)
+        setFlippedIndexes(newIndexes)      
+      } else {
+        const newIndexes = [...flippedIndexes]
+        newIndexes.push(true)
+        setFlippedIndexes(newIndexes)
+      }
+    }
   }
 
   if(game.length === 0) {
@@ -225,11 +242,20 @@ function Card({
   })
 
   useEffect(() => {
-    console.log("Flipped Indexes Changed")
+    if (flippedIndexes[2] === true && flippedIndexes.indexOf(id) > -1) {
+      setTimeout(() => {
+        set(state => !state)
+        setFlippedCount(flippedCount + 1)
+        setFlippedIndexes([])
+      }, 1000)
+    } else if (flippedIndexes[2] === false && id === 0) {
+      setFlippedCount(flippedCount + 1)
+      setFlippedIndexes([])
+    }
   }, [flippedIndexes])
 
-  const onCardClicked = () => {
-    if(!game[id].flipped && flippedCount % 3 === 0) {
+  const onCardClick = () => {
+    if (!game[id].flipped && flippedCount % 3 === 0) {
       set(state => !state)
       setFlippedCount(flippedCount + 1)
       const newIndexes = [...flippedIndexes]
@@ -249,7 +275,7 @@ function Card({
   }
 
   return (
-    <div onClick={onCardClicked}>
+    <div onClick={onCardClick}>
       <a.div
         className="c back"
         style={{
